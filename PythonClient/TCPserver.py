@@ -3,7 +3,7 @@ import socket
 import orjson
 import time
 
-cap = cv2.VideoCapture("4ktest.mov")
+cap = cv2.VideoCapture("testvideo.mov")
 params = [cv2.IMWRITE_JPEG_QUALITY, 80]
 
 TCP_IP = "127.0.0.1"
