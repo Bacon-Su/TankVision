@@ -21,8 +21,9 @@ public class CenterSystem : MonoBehaviour
         if (!IsCentered)
         {
             TargetPosition = FindTargetPosition();
-   
+            
             MoveToPosition(TargetPosition);
+            RotateFowardDirection();
 
             if (ReachedTargetPosition(TargetPosition))
             {
@@ -45,6 +46,10 @@ public class CenterSystem : MonoBehaviour
         return Vector3.Distance(TargetPosition, transform.position) < 0.1f;
     }
 
+    private void RotateFowardDirection()
+    {
+        transform.forward = CameraTransform.forward;
+    }
 
 }
 
