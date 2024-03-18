@@ -10,7 +10,8 @@ public class CenterSystem : MonoBehaviour
 
     private bool IsCentered = false;
     private Vector3 TargetPosition;
-    private Vector3 Velocity = Vector3.zero;
+    private Vector3 MoveVelocity = Vector3.zero;
+    private Vector3 RotateVelocity = Vector3.zero;
 
     private void OnBecameInvisible()
     {
@@ -38,7 +39,7 @@ public class CenterSystem : MonoBehaviour
 
     private void MoveToPosition(Vector3 TargetPosition)
     {
-        transform.position = Vector3.SmoothDamp(transform.position, TargetPosition, ref Velocity, MoveTime);
+        transform.position = Vector3.SmoothDamp(transform.position, TargetPosition, ref MoveVelocity, MoveTime);
     }
 
     private bool ReachedTargetPosition(Vector3 TargetPosition)
@@ -48,7 +49,7 @@ public class CenterSystem : MonoBehaviour
 
     private void RotateFowardDirection()
     {
-        transform.forward = CameraTransform.forward;
+        transform.forward = Vector3.SmoothDamp(transform.forward, CameraTransform.forward, ref RotateVelocity, MoveTime);
     }
 
 }
