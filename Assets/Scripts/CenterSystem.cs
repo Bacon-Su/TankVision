@@ -7,6 +7,7 @@ public class CenterSystem : MonoBehaviour
     [SerializeField] private Transform CameraTransform;
     [SerializeField] private float Distance;
     [SerializeField] private float MoveTime;
+    [SerializeField] private Vector3 Offset;
 
     private bool IsCentered = false;
     private Vector3 TargetPosition;
@@ -34,7 +35,7 @@ public class CenterSystem : MonoBehaviour
     }
     private Vector3 FindTargetPosition()
     {
-        return CameraTransform.position + (CameraTransform.forward * Distance);
+        return CameraTransform.position + (CameraTransform.forward * Distance) + Offset;
     }
 
     private void MoveToPosition(Vector3 TargetPosition)
