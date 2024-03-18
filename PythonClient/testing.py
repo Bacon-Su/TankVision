@@ -25,7 +25,7 @@ while cap.isOpened():
     startTime = time.time()
     ret, frame = cap.read()
 
-    #frame = cv2.resize(frame, dsize=(0, 0),  fx=0.5, fy=0.5)
+    frame = cv2.resize(frame, dsize=(0, 0),  fx=0.5, fy=0.5)
     
     #after stitching the camera frame
     frame_data = encoding_frame(frame)
