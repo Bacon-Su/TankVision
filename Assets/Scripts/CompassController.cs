@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CompassController : MonoBehaviour
 {
-    [SerializeField] private Transform MainCamera;
-    [SerializeField] private Transform NorthLandmark;
+    [SerializeField] private Transform Target;
+    [SerializeField] private RawImage CompassBar;
 
     private void Update()
     {
-        float CameraAngle = Vector3.SignedAngle(MainCamera.forward, NorthLandmark.position, Vector3.up);
+        float CameraAngle = Target.localEulerAngles.y;
+
+        CompassBar.uvRect = new Rect(CameraAngle / 360.0f, 0f, 1f, 1f);
+
     }
 
 }

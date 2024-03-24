@@ -5,7 +5,7 @@ import time
 import numpy as np
 import simplejpeg
 
-cap = cv2.VideoCapture("testvideo.mov")
+cap = cv2.VideoCapture("4ktest.mov")
 params = [cv2.IMWRITE_JPEG_QUALITY, 80]
 
 TCP_IP = "127.0.0.1"
