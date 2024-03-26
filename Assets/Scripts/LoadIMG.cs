@@ -15,16 +15,24 @@ public class LoadIMG : MonoBehaviour
     }
     void Update()
     {
-        
+
         //load img from dir path as bytes
         //string path = "D:\\project\\TankVision\\stitching\\result.png";
         //byte[] bytes = File.ReadAllBytes(path);
-        
+
         // create texture with bytes
-        loadTexture.LoadImage(ImgBytes);
-        
-        // create 360 skybox material & load frame img
-        material.mainTexture = loadTexture; 
-        RenderSettings.skybox = material;
+
+        if (ImgBytes.Length != 0)
+        {
+            loadTexture.LoadImage(ImgBytes);
+            // create 360 skybox material & load frame img
+            material.mainTexture = loadTexture;
+            RenderSettings.skybox = material;
+        }
+        else
+        {
+            Debug.Log("Not receiving frame");
+            RenderSettings.skybox = material;
+        }
     }
 }

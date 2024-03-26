@@ -491,6 +491,7 @@ GameObject:
   - component: {fileID: 1217894247}
   - component: {fileID: 1217894251}
   - component: {fileID: 1217894250}
+  - component: {fileID: 1217894252}
   m_Layer: 0
   m_Name: TCP Server
   m_TagString: Untagged
@@ -574,6 +575,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadTexture: {fileID: 0}
   material: {fileID: 0}
+--- !u!45 &1217894252
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217894246}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 0}
 --- !u!1 &1282346075
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,7 +618,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CameraTransform: {fileID: 963194228}
   Distance: 10
-  MoveTime: 0.05
+  MoveTime: 0.005
   Offset: {x: 0, y: 0, z: 0}
 --- !u!114 &1282346077
 MonoBehaviour:
