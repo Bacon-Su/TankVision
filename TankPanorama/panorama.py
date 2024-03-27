@@ -59,7 +59,7 @@ class Panorama(threading.Thread):
 
         super().__init__()
         self.stopflag = False
-        self.buffer = queue.Queue(1)
+        self.buffer = queue.Queue(2)
         self.fisheyes = None
         self.imagespath = None
 
@@ -246,7 +246,7 @@ class Panorama(threading.Thread):
             result[3] = self.fisheyes[3].queue_out.get()
             self.updata_images(result)
             self.stitch_all_parts()
-            self.make_white_balance()
+            #self.make_white_balance()
             self.copyMakeBorder()
 
             self.buffer.put(self.image)

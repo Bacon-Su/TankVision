@@ -74,3 +74,4 @@ PythonClient/4ktest.mov
 PythonClient/first.mp4
 PythonClient/testing.jpg
 PythonClient/testvideo.mov
+TankPanorama/__pycache__/*.pyc*
