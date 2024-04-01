@@ -6,33 +6,26 @@ using System.IO;
 public class LoadIMG : MonoBehaviour
 {
     public static byte[] ImgBytes;
-    public Texture2D loadTexture;
-    public Material material;
+    [SerializeField] private Texture2D loadTexture;
+    [SerializeField] private Material material;
+    [SerializeField] private Shader shader;
+    [SerializeField] private Renderer rend;
     private void Awake()
     {
         loadTexture = new Texture2D(1, 1);
-        material = new Material(Shader.Find("Skybox/Panoramic"));
     }
     void Update()
     {
-
-        //load img from dir path as bytes
-        //string path = "D:\\project\\TankVision\\stitching\\result.png";
-        //byte[] bytes = File.ReadAllBytes(path);
-
-        // create texture with bytes
 
         if (ImgBytes.Length != 0)
         {
             loadTexture.LoadImage(ImgBytes);
             // create 360 skybox material & load frame img
             material.mainTexture = loadTexture;
-            RenderSettings.skybox = material;
         }
         else
         {
             Debug.Log("Not receiving frame");
-            RenderSettings.skybox = material;
         }
     }
 }
