@@ -9,16 +9,25 @@ public class CameraController : MonoBehaviour
 
     bool RotateDirection = false; //left = false / right = true
     float StartAngle;
+    float NewAngle;
 
-    private void Update()
+    private void Start()
     {
         StartAngle = Camera.eulerAngles.y;
     }
-    private void FixedUpdate()
+    private void Update()
     {
-        float RotateAngle = Camera.eulerAngles.y - StartAngle;
-
-        CameraRig.transform.RotateAround(Camera.position, Vector3.up, 2 * RotateAngle);
-
+        NewAngle = Camera.eulerAngles.y - StartAngle;//Detect angle change per frame
+        Debug.Log(NewAngle);
+        AutoAdaptionRotate(NewAngle);
+        StartAngle = Camera.eulerAngles.y;
     }
+
+
+    private void AutoAdaptionRotate(float Angle)
+    {
+        float RotateAngle = 2 * Angle;
+        CameraRig.transform.RotateAround(Camera.position, Vector3.up, RotateAngle);
+    }
+
 }
