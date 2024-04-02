@@ -736,7 +736,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadTexture: {fileID: 0}
-  material: {fileID: -3033667219593020291, guid: 6b2af730cff497841b3a96cf16947a77, type: 3}
+  material: {fileID: 2100000, guid: ba35fe0bd4c8af843823b44168bedc91, type: 2}
   shader: {fileID: 4800000, guid: c3e8fa0bfe53fb544b6b9bd2a244feea, type: 3}
   rend: {fileID: -7635826562936255635, guid: 6b2af730cff497841b3a96cf16947a77, type: 3}
 --- !u!45 &1217894252
@@ -877,12 +877,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 6b2af730cff497841b3a96cf16947a77, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6b2af730cff497841b3a96cf16947a77, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6b2af730cff497841b3a96cf16947a77, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.36144
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6b2af730cff497841b3a96cf16947a77, type: 3}
       propertyPath: m_LocalPosition.z
@@ -916,6 +920,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: 6b2af730cff497841b3a96cf16947a77, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ba35fe0bd4c8af843823b44168bedc91, type: 2}
     - target: {fileID: 919132149155446097, guid: 6b2af730cff497841b3a96cf16947a77, type: 3}
       propertyPath: m_Name
       value: panorama
