@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
 
     bool RotateDirection = false; //left = false / right = true
     float StartAngle;
-    float NewAngle;
+    float AnglePerFrame;
 
     private void Start()
     {
@@ -17,16 +17,15 @@ public class CameraController : MonoBehaviour
     }
     private void Update()
     {
-        NewAngle = Camera.eulerAngles.y - StartAngle;//Detect angle change per frame
-        Debug.Log(NewAngle);
-        AutoAdaptionRotate(NewAngle);
+        AnglePerFrame = Camera.eulerAngles.y - StartAngle;//Detect angle change per frame
+        AutoAdaptionRotate(AnglePerFrame);
         StartAngle = Camera.eulerAngles.y;
     }
 
 
     private void AutoAdaptionRotate(float Angle)
     {
-        float RotateAngle = 2 * Angle;
+        float RotateAngle = 3 * Angle - Angle;
         CameraRig.transform.RotateAround(Camera.position, Vector3.up, RotateAngle);
     }
 
