@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
 
     private void AutoAdaptionRotate(float Angle)
     {
-        float RotateAngle = 3 * Angle - Angle;
+        float RotateAngle = 1 * Angle - Angle;
         CameraRig.transform.RotateAround(Camera.position, Vector3.up, RotateAngle);
     }
 

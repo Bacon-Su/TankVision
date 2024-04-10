@@ -14,14 +14,14 @@ public class CompassController : MonoBehaviour
 
     private void Start()
     {
-        AngleMultiplier = 8.0f * 2.5f / 360f;
+        AngleMultiplier = 3.8f / 45f;
     }
-    private void Update()
+    private void Update()        
     {
         //float TargetAngle = Target.localEulerAngles.y;
 
         //CompassBar.uvRect = new Rect(TargetAngle / 360.0f, 0f, 1f, 1f);
-        //SetMarkerPosition(testMarker, Vector3.forward * 1000);
+        SetMarkerPosition(testMarker, Vector3.forward * 1000, CamTransform);
         RotateCompass(Vector3.forward * 1000, CamTransform);
     }
 

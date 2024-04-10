@@ -8,8 +8,6 @@ public class LoadIMG : MonoBehaviour
     public static byte[] ImgBytes;
     [SerializeField] private Texture2D loadTexture;
     [SerializeField] private Material material;
-    [SerializeField] private Shader shader;
-    [SerializeField] private Renderer rend;
     private void Awake()
     {
         loadTexture = new Texture2D(1, 1);
