@@ -5,28 +5,56 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private Transform Camera;
-    [SerializeField] private Transform CameraRig;
+    [SerializeField] private Transform CameraOffset;
 
     bool RotateDirection = false; //left = false / right = true
     float StartAngle;
-    float AnglePerFrame;
+    float NewAngle;
 
     private void Start()
     {
-        StartAngle = Camera.eulerAngles.y;
+        StartAngle = Camera.localEulerAngles.y;
     }
     private void Update()
     {
-        AnglePerFrame = Camera.eulerAngles.y - StartAngle;//Detect angle change per frame
-        AutoAdaptionRotate(AnglePerFrame);
-        StartAngle = Camera.eulerAngles.y;
+        NewAngle = Camera.localEulerAngles.y - StartAngle;//Detect angle change per frame
+        
+        if(NewAngle > 0f)
+        {
+            RotateDirection = true;
+        }
+        if(NewAngle > 180f)
+        {
+            RotateDirection = false;
+            NewAngle = NewAngle - 360f;
+        }
+        AutoAdaptionRotate(NewAngle, RotateDirection);
     }
 
 
-    private void AutoAdaptionRotate(float Angle)
+    private void AutoAdaptionRotate(float Angle, bool RotateDirection)
     {
-        float RotateAngle = 1 * Angle - Angle;
-        CameraRig.transform.RotateAround(Camera.position, Vector3.up, RotateAngle);
+        //(tan((abs(x)+3)/3) - tan(1))/2
+        float AngleMultiplier = (Mathf.Tan((Mathf.Abs(Mathf.Deg2Rad * Angle) + 3f) / 3f) - Mathf.Tan(1)) / 2f * Mathf.Rad2Deg;
+        
+        if(AngleMultiplier > 180f)
+        {
+            AngleMultiplier = 180f;
+        }
+        if (!RotateDirection)
+        {
+            AngleMultiplier = -AngleMultiplier;
+            AngleMultiplier = AngleMultiplier - Angle;
+        }
+        if (RotateDirection)
+        {
+            Angle = -Angle;
+            AngleMultiplier = AngleMultiplier + Angle;
+        }
+
+        float RotateAngle = AngleMultiplier;
+
+        CameraOffset.transform.localEulerAngles = new Vector3(CameraOffset.transform.localEulerAngles.x, RotateAngle, CameraOffset.transform.localEulerAngles.z);
     }
 
 }
