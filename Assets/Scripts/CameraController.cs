@@ -57,4 +57,21 @@ public class CameraController : MonoBehaviour
         CameraOffset.transform.localEulerAngles = new Vector3(CameraOffset.transform.localEulerAngles.x, RotateAngle, CameraOffset.transform.localEulerAngles.z);
     }
 
+    private float calculate_angle(float angle, float low_angle, float multi)
+    {
+        float result = 0;
+        float start_angle = 0;
+
+        start_angle = low_angle;
+        if(angle - start_angle >= 0)
+        {
+            result = multi * (angle - start_angle); 
+        }
+        else
+        {
+            result = angle;
+        }
+        return result;
+    }
+
 }
