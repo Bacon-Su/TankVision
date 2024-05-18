@@ -7,13 +7,11 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Transform mainCamera;
     [SerializeField] private Transform cameraOffset;
 
-    bool rotateDirection = false; //left = false / right = true
-
     float camStartAngle;
     float camNewAngle;
     float camAngle;
 
-    float offsetStartAngle;
+    float sensitive;
 
     private void Start()
     {
@@ -31,44 +29,38 @@ public class CameraController : MonoBehaviour
         if (camAngle - camStartAngle >= 0f)
         {
             angle = camAngle;
-            rotateDirection = true;
         }
         if(camAngle - camStartAngle >= 180f)
         {
             angle = 360f - camAngle; //limit the camAngle to 0 - 180 degree
-            rotateDirection = false;
         }
-
-        float result = 0;
 
         if(angle >= 15f)
         {
-            result = calculateAngle(camNewAngle, rotateDirection, 4f);
+            sensitive = 4f;
         }
         else if(angle >= 0f)
         {
-            result = calculateAngle(camNewAngle, rotateDirection, 0.01f);
+            sensitive = 1f;
         }
-        Debug.Log(result);
-        cameraOffset.transform.localEulerAngles += new Vector3(
-            cameraOffset.transform.localEulerAngles.x,
-            result,
-            cameraOffset.transform.localEulerAngles.z);
-        // bound the camera transform at 180 degree
-        // coding...
+
+        float result = 0;
+        result = calculateAngle(camNewAngle, sensitive);
+
+        if (mainCamera.eulerAngles.y + result < 180f)
+        {
+            cameraOffset.transform.localEulerAngles += new Vector3(
+                cameraOffset.transform.localEulerAngles.x,
+                result,
+                cameraOffset.transform.localEulerAngles.z);
+        }
     }
 
 
-    private float calculateAngle(float camNewAngle, bool rotate_dir, float sensitive)
+    private float calculateAngle(float camNewAngle, float sensitive)
     {
         float result = 0;
-
         result = camNewAngle * sensitive;
-
-        //if (!rotate_dir)
-        //{
-        //    result = -result;
-        //}
 
         return result;
     }
