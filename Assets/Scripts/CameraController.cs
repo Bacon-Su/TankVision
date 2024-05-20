@@ -47,13 +47,15 @@ public class CameraController : MonoBehaviour
         float result = 0;
         result = calculateAngle(camNewAngle, sensitive);
 
-        if (mainCamera.eulerAngles.y + result < 180f)
+        if(angle + result > 180f)
         {
-            cameraOffset.transform.localEulerAngles += new Vector3(
-                cameraOffset.transform.localEulerAngles.x,
-                result,
-                cameraOffset.transform.localEulerAngles.z);
+            result = 0;
         }
+
+        cameraOffset.transform.localEulerAngles += new Vector3(
+            cameraOffset.transform.localEulerAngles.x,
+            result,
+            cameraOffset.transform.localEulerAngles.z);
     }
 
 
