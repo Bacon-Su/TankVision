@@ -35,9 +35,13 @@ public class CameraController : MonoBehaviour
             angle = 360f - camAngle; //limit the camAngle to 0 - 180 degree
         }
 
-        if(angle >= 15f)
+        if(angle >= 45f)
         {
-            sensitive = 4f;
+            sensitive = 3f;
+        }
+        else if(angle >= 15f)
+        {
+            sensitive = 2f;
         }
         else if(angle >= 0f)
         {
@@ -63,7 +67,6 @@ public class CameraController : MonoBehaviour
     {
         float result = 0;
         result = camNewAngle * sensitive;
-
         return result;
     }
 

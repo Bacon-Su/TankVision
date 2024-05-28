@@ -37,7 +37,7 @@ def sending_frame(cap):
 
 if __name__ == "__main__":
     while True:
-        cap = cv2.VideoCapture("testvideo.mov")
+        cap = cv2.VideoCapture("4ktest.mov")
         if cap.isOpened():
             print("Start sending frame to Unity")
             status = sending_frame(cap)
