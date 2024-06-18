@@ -22,12 +22,9 @@ if __name__ == "__main__":
     print("init finish")
     TCP_IP = "127.0.0.1"
     TCP_PORT = 5066
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
     address = (TCP_IP, TCP_PORT)
 
-    print("init")
-    panoramaReceiver, detection = init()
-    print("init finish")
     decs = []
     while True:
         last = time.time()
