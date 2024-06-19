@@ -7,6 +7,7 @@ import json
 import queue
 import serial
 from pynput import keyboard
+from zmqCls import joystickPublisher
 pygame.init()
 pygame.joystick.init()
 
@@ -28,7 +29,7 @@ print(joystick.get_name())
 # (-1,-1) (0,-1) (1,-1)
 
 keyDict = {'Steering Wheel':0,
-            'Right Pedal':1,
+            'Right Pedal':-1,
             'Middle Pedal':1,
             'Left Pedal':1,
             'Cross':0,
@@ -61,15 +62,15 @@ def controller_key():
 
             if event.button == 0:
                 keyDict['Cross'] = keyValue
-            elif event.button == 4:
+            elif event.button == 2:
                 keyDict['Square'] = keyValue
-            elif event.button == 5:
+            elif event.button == 1:
                 keyDict['Circle'] = keyValue
             elif event.button == 3:
                 keyDict['Triangle'] = keyValue
-            elif event.button == 1:
+            elif event.button == 5:
                 keyDict['Steering Wheel Button Right'] = keyValue
-            elif event.button == 2:
+            elif event.button == 4:
                 keyDict['Steering Wheel Button Left'] = keyValue
 
         if event.type == pygame.JOYBUTTONUP:
@@ -78,15 +79,15 @@ def controller_key():
 
             if event.button == 0:
                 keyDict['Cross'] = keyValue
-            elif event.button == 4:
+            elif event.button == 2:
                 keyDict['Square'] = keyValue
-            elif event.button == 5:
+            elif event.button == 1:
                 keyDict['Circle'] = keyValue
             elif event.button == 3:
                 keyDict['Triangle'] = keyValue
-            elif event.button == 1:
+            elif event.button == 5:
                 keyDict['Steering Wheel Button Right'] = keyValue
-            elif event.button == 2:
+            elif event.button == 4:
                 keyDict['Steering Wheel Button Left'] = keyValue
 
         if event.type == pygame.JOYHATMOTION:
@@ -95,10 +96,13 @@ def controller_key():
 
     return keyDict
 
-emiter = Emiter()
-emiter.start()  
-stall = 1
+
 if __name__ == '__main__':
+    emiter = Emiter()
+    emiter.start()
+    joystick_publisher = joystickPublisher()
+    joystick_publisher.start()
+    stall = 1
     while True:
         temp = controller_key()
         if int(temp["Steering Wheel Button Left"]) == 1:
@@ -109,13 +113,22 @@ if __name__ == '__main__':
         if stall == 2:
             throttle = -throttle
         steer = float(temp["Steering Wheel"])*1000
-        if abs(steer) < 11.2: #死區 小於兩度為零
+        if abs(steer) < 50: #死區
             steer = 0
         data = {"throttle":int(throttle),"steer":int(steer)}
-        print(data)
+        #print(data)
         try:
             emiter.emitQueue.put(json.dumps(data).encode("utf-8"), False)
         except queue.Full:
-                pass
+            pass
+        data["Cross"] = temp["Cross"]
+        data["Square"] = temp["Square"]
+        data["Circle"] = temp["Circle"]
+        data["Triangle"] = temp["Triangle"]
+        data["Dpad"] = list(temp["Dpad"])
+        data["stall"] = stall
+        if not joystick_publisher.inQueue.full():
+            joystick_publisher.inQueue.put(data)
+        print(data)
         time.sleep(0.1)
         
