@@ -1,12 +1,10 @@
 import pygame
 from emiter_controller import Emiter
-import socket
-import threading
 import time
 import json
 import queue
-import serial
 from pynput import keyboard
+from zmqCls import joystickPublisher
 pygame.init()
 pygame.joystick.init()
 
@@ -95,10 +93,13 @@ def controller_key():
 
     return keyDict
 
-emiter = Emiter()
-emiter.start()  
-stall = 1
+
 if __name__ == '__main__':
+    emiter = Emiter()
+    emiter.start()  
+    stall = 1
+    joystick_publisher = joystickPublisher()
+    joystick_publisher.start()
     while True:
         temp = controller_key()
         if int(temp["Steering Wheel Button Left"]) == 1:
@@ -112,10 +113,18 @@ if __name__ == '__main__':
         if abs(steer) < 11.2: #死區 小於兩度為零
             steer = 0
         data = {"throttle":int(throttle),"steer":int(steer)}
-        print(data)
         try:
             emiter.emitQueue.put(json.dumps(data).encode("utf-8"), False)
         except queue.Full:
                 pass
+        data["Cross"] = temp["Cross"]
+        data["Square"] = temp["Square"]
+        data["Circle"] = temp["Circle"]
+        data["Triangle"] = temp["Triangle"]
+        data["Dpad"] = list(temp["Dpad"])
+        data["stall"] = stall
+        if not joystick_publisher.inQueue.full():
+            joystick_publisher.inQueue.put(data)
+        print(data)
         time.sleep(0.1)
         

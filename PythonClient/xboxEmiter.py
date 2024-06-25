@@ -116,7 +116,6 @@ if __name__ == '__main__':
         if abs(steer) < 50: #死區
             steer = 0
         data = {"throttle":int(throttle),"steer":int(steer)}
-        #print(data)
         try:
             emiter.emitQueue.put(json.dumps(data).encode("utf-8"), False)
         except queue.Full:
