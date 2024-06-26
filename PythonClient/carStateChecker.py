@@ -21,7 +21,7 @@ class CarStateChecker_Emit(threading.Thread):
         self.daemon = True
         self.timeoutCount = 0
 
-        self.packets = deque(maxlen=100) # 100 個輸出計算掉包與延遲
+        self.packets = deque(maxlen=30) # 30 個輸出計算掉包與延遲
 
         self.recvQueue = queue.Queue(1)
     def initSocket(self):
@@ -44,22 +44,29 @@ class CarStateChecker_Emit(threading.Thread):
                 print(e)
     
     def get_latency_loss(self):
-        if len(self.packets) == 0 or self.client is None:
-            return -1,-1
-        average_latency = 0
-        loss = 0
-        for p in self.packets:
-            if p is not None:
-                average_latency += p["latency"]
-            else:
-                loss += 1
-        if (len(self.packets) - loss) == 0:
-            return -1,-1
-        return average_latency / (len(self.packets) - loss)/1000000, loss/len(self.packets)
+        if not self.packets or self.client is None:
+            return -1, -1
+
+        valid_packets = sum(1 for p in self.packets if p is not None)
+        if not valid_packets:
+            return -1, -1
+
+        latency_sum = sum(p["latency"] for p in self.packets if p is not None)
+        average_latency = latency_sum / 1000000 / valid_packets
+        packet_loss = (len(self.packets) - valid_packets) / len(self.packets)
+
+        return average_latency/3, packet_loss
             
     def respond(self):
-        self.socket.settimeout(0.15)
-        self.client.settimeout(0.15)
+        latency, _ = self.get_latency_loss()
+        if latency < 0 or latency < 0.015:
+            timeout = 0.15
+        else:
+            timeout = latency*0.8
+        if timeout > 0.5:
+            timeout = 0.5
+        self.socket.settimeout(timeout)
+        self.client.settimeout(timeout)
         success = False
         data = {
             "time": time.time_ns(),
@@ -67,7 +74,7 @@ class CarStateChecker_Emit(threading.Thread):
         try:
             data = json.dumps(data).encode("utf-8")
             self.client.sendall(data)
-            print(len(data))
+            #print(len(data))
             self.timeoutCount = 0
             success = True
         except TimeoutError:
@@ -85,7 +92,7 @@ class CarStateChecker_Emit(threading.Thread):
             return False
         if success:
             try:
-                data = self.client.recv(29)
+                data = self.client.recv(102)
             except:
                 self.packets.append(None)
                 return False
