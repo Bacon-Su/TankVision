@@ -3,7 +3,6 @@ import threading
 import time
 import json
 import queue
-import serial
 from pynput import keyboard
 import random
 

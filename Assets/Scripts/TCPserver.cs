@@ -63,6 +63,7 @@ public class TCPserver : MonoBehaviour
     public class Data
     {
         public byte[] image;
+        
     }
     private void Update()
     {

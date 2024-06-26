@@ -29,7 +29,7 @@ joystickKey = {
 if __name__ == "__main__":
     #goal: multiple threads
     print("init")
-    panoramaReceiver,detection = init("PythonClient\TankPanorama\yolov8n.pt","rtsp://10.22.6.103:8554/video_stream")
+    panoramaReceiver,detection = init("PythonClient\TankPanorama\yolov8n.pt","rtsp://10.147.18.163:8554/video_stream")
     joystick_subscriber = joystickSubscriber()
     joystick_subscriber.start()
     print("init finish")
@@ -63,6 +63,7 @@ if __name__ == "__main__":
         frame_data["Triangle"] = joystickKey["Triangle"]
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(0.01)
             sock.connect(address)
             sock.sendall(data)    
             sock.close()

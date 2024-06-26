@@ -112,7 +112,7 @@ if __name__ == '__main__':
         throttle = float(temp["Right Pedal"]+1)/2*1000
         if stall == 2:
             throttle = -throttle
-        steer = float(temp["Steering Wheel"])*1000
+        steer = -float(temp["Steering Wheel"])*1000
         if abs(steer) < 50: #死區
             steer = 0
         data = {"throttle":int(throttle),"steer":int(steer)}
