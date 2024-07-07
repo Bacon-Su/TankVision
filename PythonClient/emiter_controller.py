@@ -36,7 +36,7 @@ class Emiter(threading.Thread):
                 print("Connected by", addr)
                 break
             except TimeoutError:
-                print("time out")
+                print("Connect time out")
             except BaseException as e:
                 print(e)
 
@@ -46,7 +46,10 @@ class Emiter(threading.Thread):
         except queue.Empty:
             return None
         try:
-            data = self.client.sendall(data)
+            if random.random() < 0.25:
+                data = self.client.sendall(None)
+            else:
+                data = self.client.sendall(data)
             self.timeoutCount = 0
             return True
         except TimeoutError:

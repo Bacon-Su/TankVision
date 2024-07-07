@@ -14,7 +14,6 @@ public class LoadIMG : MonoBehaviour
     }
     void Update()
     {
-
         if (ImgBytes.Length != 0)
         {
             loadTexture.LoadImage(ImgBytes);

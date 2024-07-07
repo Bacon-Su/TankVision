@@ -23,7 +23,6 @@ class CarStateChecker_Emit(threading.Thread):
 
         self.packets = deque(maxlen=30) # 30 個輸出計算掉包與延遲
 
-        self.recvQueue = queue.Queue(1)
     def initSocket(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -39,7 +38,7 @@ class CarStateChecker_Emit(threading.Thread):
                 self.packets.clear()
                 break
             except TimeoutError:
-                print("time out")
+                print("CarStateChecker time out")
             except BaseException as e:
                 print(e)
     
@@ -55,11 +54,11 @@ class CarStateChecker_Emit(threading.Thread):
         average_latency = latency_sum / 1000000 / valid_packets
         packet_loss = (len(self.packets) - valid_packets) / len(self.packets)
 
-        return average_latency/3, packet_loss
+        return int(average_latency/3), int(packet_loss/100)
             
     def respond(self):
         latency, _ = self.get_latency_loss()
-        if latency < 0 or latency < 0.015:
+        if latency < 0 or latency < 0.15:
             timeout = 0.15
         else:
             timeout = latency*0.8
@@ -92,7 +91,7 @@ class CarStateChecker_Emit(threading.Thread):
             return False
         if success:
             try:
-                data = self.client.recv(102)
+                data = self.client.recv(130)
             except:
                 self.packets.append(None)
                 return False

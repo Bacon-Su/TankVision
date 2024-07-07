@@ -17,6 +17,22 @@ public class TCPserver : MonoBehaviour
     int port;
 
     byte[] imgDatas = new byte[0];
+    float throttle = 100;
+    float steer = 0;
+    int stall = 1;
+    int ping = -1;
+    int loss = -1;
+
+    public class Data
+    {
+        public byte[] image;
+        public int throttle;
+        public int steer;
+        public int stall;
+
+        public int ping;
+        public int loss;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -49,8 +65,17 @@ public class TCPserver : MonoBehaviour
 
                 string jsonData = sr.ReadLine();
 
-                Data _imgData = JsonUtility.FromJson<Data>(jsonData);
-                imgDatas = _imgData.image;
+                Data PythonJsonData = JsonUtility.FromJson<Data>(jsonData);
+                if (PythonJsonData.image != null){
+                    imgDatas = PythonJsonData.image;
+                }
+
+                ping = PythonJsonData.ping;
+                loss = PythonJsonData.loss;
+                throttle = PythonJsonData.throttle;
+                steer = PythonJsonData.steer;
+                stall = PythonJsonData.stall;
+                
 
             }
             catch (Exception e)
@@ -60,14 +85,15 @@ public class TCPserver : MonoBehaviour
         }
     }
 
-    public class Data
-    {
-        public byte[] image;
-        
-    }
+    
     private void Update()
     {
-        LoadIMG.ImgBytes = imgDatas;
+        CarState.ping = ping;
+        CarState.loss = loss;
+        CarState.throttle = throttle;
+        CarState.steer = steer;
+        CarState.stall = stall;
+        LoadIMG.ImgBytes = imgDatas;   
     }
 
     private void OnDestroy()

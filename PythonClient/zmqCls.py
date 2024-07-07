@@ -45,6 +45,17 @@ class joystickSubscriber(threading.Thread):
         self.socket.setsockopt_string(zmq.SUBSCRIBE, "")
         self.daemon = True
         self.outQueue = queue.Queue(1)
+        self.joystickKey ={
+            'throttle':0,
+            'steer':0,
+            'stall':1,
+            'Steering Wheel':0,
+            'Cross':0,
+            'Square':0,
+            'Circle':0,
+            'Triangle':0,
+            'Dpad':[0, 0]
+        }
         '''
         outQueue
         {
@@ -61,6 +72,13 @@ class joystickSubscriber(threading.Thread):
             'Triangle': 0,
         }  
         '''
+
+    def getKey(self):
+        if not self.outQueue.empty():
+            self.joystickKey = self.outQueue.get()
+            return self.outQueue.get()
+        else:
+            return self.joystickKey
 
     def run(self):
         while True:
