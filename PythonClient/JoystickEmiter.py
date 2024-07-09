@@ -193,7 +193,7 @@ if __name__ == '__main__':
         if stall == 2:
             throttle = -throttle
         steer = -float(temp["steering"])*1000
-        if abs(steer) < 11.2: #死區
+        if abs(steer) < deadspace: #死區
             steer = 0
         data = {"throttle":int(throttle),"steer":int(steer)}
         try:
