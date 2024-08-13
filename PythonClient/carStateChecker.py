@@ -8,6 +8,7 @@ from pynput import keyboard
 import random
 
 HOST = "10.147.18.60"
+#HOST = "192.168.0.157"
 #HOST = "10.22.233.150"
 #HOST = "127.0.0.1"
 PORT = 65434
@@ -54,8 +55,15 @@ class CarStateChecker_Emit(threading.Thread):
         average_latency = latency_sum / 1000000 / valid_packets
         packet_loss = (len(self.packets) - valid_packets) / len(self.packets)
 
-        return int(average_latency/3), int(packet_loss/100)
-            
+        return int(average_latency/2), int(packet_loss/100)
+    
+    def get_speed_volt(self):
+        for i in range(len(self.packets)-1,-1,-1):
+            if self.packets[i] is not None:
+                return self.packets[i]["SPEED"], self.packets[i]["ESP_VOLT"]
+        return 0,-1
+
+
     def respond(self):
         latency, _ = self.get_latency_loss()
         if latency < 0 or latency < 0.15:

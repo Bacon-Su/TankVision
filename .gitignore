@@ -61,6 +61,7 @@ sysinfo.txt
 *.unitypackage
 *.app
 *.mp4
+*.avi
 *.pyc
 # Crashlytics generated file
 crashlytics-build.properties
@@ -71,8 +72,8 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-PythonClient/4ktest.mov
-PythonClient/first.mp4
-PythonClient/testing.jpg
-PythonClient/testvideo.mov
+PythonClient/*.mov
+PythonClient/*.mp4
+PythonClient/*.jpg
+PythonClient/*.png
 PythonClient/note

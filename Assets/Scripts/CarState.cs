@@ -12,6 +12,7 @@ public class CarState : MonoBehaviour
     [SerializeField] private TextMeshProUGUI speedText;
     [SerializeField] private TextMeshProUGUI pingText;
     [SerializeField] private TextMeshProUGUI LossText;
+    [SerializeField] private TextMeshProUGUI voltText;
 
 
     public static float throttle = 100; 
@@ -24,7 +25,8 @@ public class CarState : MonoBehaviour
 
     public static int ping = -1;
     public static int loss = -1;
-
+    public static int speed = 0;
+    public static float volt = -1;
     // Update is called once per frame
     void Update()
     {
@@ -47,7 +49,8 @@ public class CarState : MonoBehaviour
         rotAngle = (float) steer / 1000 * 60;
         Stick.localEulerAngles = new Vector3(0, 0, rotAngle);
         
-        speedText.text = "0";
+        speedText.text = speed.ToString();
+        voltText.text = volt.ToString() + " V";
 
         pingText.text = ping.ToString() + " ms";
         LossText.text = loss.ToString() + " %";

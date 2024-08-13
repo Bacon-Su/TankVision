@@ -7,6 +7,7 @@ from pynput import keyboard
 import random
 
 HOST = "10.147.18.60"
+#HOST = "192.168.0.157"
 #HOST = "10.22.233.150"
 #HOST = "127.0.0.1"
 PORT = 65432
@@ -46,10 +47,10 @@ class Emiter(threading.Thread):
         except queue.Empty:
             return None
         try:
-            if random.random() < 0.25:
-                data = self.client.sendall(None)
-            else:
-                data = self.client.sendall(data)
+            # if random.random() < 0.25:
+            #     data = self.client.sendall(None)
+            # else:
+            data = self.client.sendall(data)
             self.timeoutCount = 0
             return True
         except TimeoutError:

@@ -22,6 +22,16 @@ public class TCPserver : MonoBehaviour
     int stall = 1;
     int ping = -1;
     int loss = -1;
+    int speed = 0;
+    float volt = -1;
+
+    List<float> x0;
+    List<float> y0;
+    List<float> x1;
+    List<float> y1;
+    public List<int> cls;
+    List<int> trackId;
+    List<float> deg;
 
     public class Data
     {
@@ -32,6 +42,16 @@ public class TCPserver : MonoBehaviour
 
         public int ping;
         public int loss;
+        public int speed;
+        public float volt;
+
+        public List<float> x0;
+        public List<float> y0;
+        public List<float> x1;
+        public List<float> y1;
+        public List<int> cls;
+        public List<int> trackId;
+        public List<float> deg;
     }
 
     // Start is called before the first frame update
@@ -64,7 +84,6 @@ public class TCPserver : MonoBehaviour
                 StreamReader sr = new StreamReader(stream);
 
                 string jsonData = sr.ReadLine();
-
                 Data PythonJsonData = JsonUtility.FromJson<Data>(jsonData);
                 if (PythonJsonData.image != null){
                     imgDatas = PythonJsonData.image;
@@ -75,7 +94,16 @@ public class TCPserver : MonoBehaviour
                 throttle = PythonJsonData.throttle;
                 steer = PythonJsonData.steer;
                 stall = PythonJsonData.stall;
-                
+                speed = PythonJsonData.speed;
+                volt = (float)(PythonJsonData.volt/100.0);
+
+                x0 = PythonJsonData.x0;
+                y0 = PythonJsonData.y0;
+                x1 = PythonJsonData.x1;
+                y1 = PythonJsonData.y1;
+                cls = PythonJsonData.cls;
+                trackId = PythonJsonData.trackId;
+                deg = PythonJsonData.deg;
 
             }
             catch (Exception e)
@@ -93,7 +121,16 @@ public class TCPserver : MonoBehaviour
         CarState.throttle = throttle;
         CarState.steer = steer;
         CarState.stall = stall;
-        LoadIMG.ImgBytes = imgDatas;   
+        CarState.speed = speed;
+        CarState.volt = volt;
+        LoadIMG.ImgBytes = imgDatas;
+        YoloArror.x0 = x0;
+        YoloArror.y0 = y0;
+        YoloArror.x1 = x1;
+        YoloArror.y1 = y1;
+        YoloArror.cls = cls;
+        YoloArror.trackId = trackId;
+        YoloArror.deg = deg;
     }
 
     private void OnDestroy()
