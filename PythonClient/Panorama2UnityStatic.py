@@ -19,7 +19,7 @@ if __name__ == "__main__":
     #goal: multiple threads
     print("init")
     cap = cv2.VideoCapture(r"PythonClient\a1.avi")
-    detection = Detection("PythonClient\TankPanorama\yolov9m.pt")
+    detection = Detection("PythonClient\TankPanorama\yolov9s.pt")
     detection.start()
     joystick_subscriber = joystickSubscriber()
     joystick_subscriber.start()
