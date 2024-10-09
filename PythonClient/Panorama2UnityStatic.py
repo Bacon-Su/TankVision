@@ -38,7 +38,7 @@ if __name__ == "__main__":
         _,image = cap.read()
         image = cv2.resize(image, (1700, 500))
         joystickKey = joystick_subscriber.getKey()
-        #image = cv2.copyMakeBorder(image, 175, 175, 0, 0, cv2.BORDER_CONSTANT,value=[0,0,0])
+        image = cv2.copyMakeBorder(image, 100, 100, 0, 0, cv2.BORDER_CONSTANT,value=[0,0,0])
         frame_data = {}
         if image is not None:
             if not detection.in_queue.full():
