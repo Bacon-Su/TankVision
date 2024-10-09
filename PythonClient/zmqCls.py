@@ -54,7 +54,9 @@ class joystickSubscriber(threading.Thread):
             'Square':0,
             'Circle':0,
             'Triangle':0,
-            'Dpad':[0, 0]
+            'Dpad':[0, 0],
+            'base':0,
+            'fort':0
         }
         '''
         outQueue
@@ -76,7 +78,7 @@ class joystickSubscriber(threading.Thread):
     def getKey(self):
         if not self.outQueue.empty():
             self.joystickKey = self.outQueue.get()
-            return self.outQueue.get()
+            return self.joystickKey
         else:
             return self.joystickKey
 

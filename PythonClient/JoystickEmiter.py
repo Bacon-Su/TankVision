@@ -46,14 +46,22 @@ if not SECTIONNAME:
         try:
             currently_pressed.remove(key.char)
         except AttributeError:
-            if key == keyboard.Key.space:
+            if key in [keyboard.Key.space, 
+                       keyboard.Key.up, 
+                       keyboard.Key.down, 
+                       keyboard.Key.left, 
+                       keyboard.Key.right]:
                 currently_pressed.remove(key)
             pass
     def on_press(key):
         try:
             currently_pressed.add(key.char)
         except AttributeError:
-            if key == keyboard.Key.space:
+            if key in [keyboard.Key.space, 
+                       keyboard.Key.up, 
+                       keyboard.Key.down, 
+                       keyboard.Key.left, 
+                       keyboard.Key.right]:
                 currently_pressed.add(key)
             pass
     listener = keyboard.Listener(on_press=on_press, on_release=on_release)
@@ -165,9 +173,45 @@ def controller_key():
             keyDict['l2'] = 1
             keyDict['r1'] = 1
             keyDict['steering'] = -1
+        elif currently_pressed == set([keyboard.Key.space]):
+            keyDict['r1'] = -1
+            keyDict['steering'] = 0
+            keyDict['x'] = 1
+        elif currently_pressed == set([keyboard.Key.up]):
+            keyDict['r1'] = -1
+            keyDict['steering'] = 0
+            keyDict['dpad'] = [0,1]
+        elif currently_pressed == set([keyboard.Key.down]):
+            keyDict['r1'] = -1
+            keyDict['steering'] = 0
+            keyDict['dpad'] = [0,-1]
+        elif currently_pressed == set([keyboard.Key.left]):
+            keyDict['r1'] = -1
+            keyDict['steering'] = 0
+            keyDict['dpad'] = [-1,0]
+        elif currently_pressed == set([keyboard.Key.right]):
+            keyDict['r1'] = -1
+            keyDict['steering'] = 0
+            keyDict['dpad'] = [1,0]
+        elif currently_pressed == set('b'):
+            keyDict['r1'] = -1
+            keyDict['steering'] = 0
+            keyDict['b'] = 1
+            keyDict['x'] = 0 
+            keyDict['dpad'] = [0,0]
+        elif currently_pressed == set('y'):
+            keyDict['r1'] = -1
+            keyDict['steering'] = 0
+            keyDict['y'] = 1
+            keyDict['x'] = 0 
+            keyDict['dpad'] = [0,0]
         else:
             keyDict['r1'] = -1
-            keyDict['steering'] = 0        
+            keyDict['steering'] = 0
+            keyDict['x'] = 0 
+            keyDict['b'] = 0
+            keyDict['y'] = 0
+            keyDict['dpad'] = [0,0]
     return keyDict
 
 
@@ -177,6 +221,8 @@ if __name__ == '__main__':
     joystick_publisher = joystickPublisher()
     joystick_publisher.start()
     stall = 1
+    fort = 0
+    base = 0
     while True:
         temp = controller_key()
         if int(temp["l2"]) == 1:
@@ -184,7 +230,6 @@ if __name__ == '__main__':
         if int(temp["r2"]) == 1:
             stall = 1
 
-        
         if SECTIONNAME=='G923':
             throttle = -float(temp["r1"]-1)/2*1000
         else:
@@ -195,11 +240,36 @@ if __name__ == '__main__':
         steer = -float(temp["steering"])*1000
         if abs(steer) < deadspace: #死區
             steer = 0
+
+        if temp['dpad'][1] == 1: #上
+            fort -= 2
+            if fort > 10:
+                fort = 10
+        elif temp['dpad'][1] == -1: #下
+            fort += 2
+            if fort < -40:
+                fort = -40
+        if temp['dpad'][0] == 1: #右
+            base += 2
+            if base > 60:
+                base = 60
+        elif temp['dpad'][0] == -1: #左
+            base -= 2
+            if base < -60:
+                base = -60
         data = {"throttle":int(throttle),"steer":int(steer)}
+        if temp['b'] == 1:
+            data["fort"] = fort
+            data["base"] = base
+        if temp["x"] == 1:
+            data["launch"] = 1
+        #print(len(json.dumps(data).encode("utf-8")))
         try:
             emiter.emitQueue.put(json.dumps(data).encode("utf-8"), False)
         except queue.Full:
             pass
+        data["fort"] = fort
+        data["base"] = base
         data["a"] = temp["a"]
         data["x"] = temp["x"]
         data["b"] = temp["b"]

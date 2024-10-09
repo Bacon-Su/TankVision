@@ -36,6 +36,9 @@ if __name__ == "__main__":
     while True:
         last = time.time()
         _,image = cap.read()
+        image = cv2.resize(image, (1700, 500))
+        joystickKey = joystick_subscriber.getKey()
+        #image = cv2.copyMakeBorder(image, 175, 175, 0, 0, cv2.BORDER_CONSTANT,value=[0,0,0])
         frame_data = {}
         if image is not None:
             if not detection.in_queue.full():
@@ -43,18 +46,20 @@ if __name__ == "__main__":
             if not detection.out_queue.empty():
                 decs = detection.out_queue.get()
             image = detection.draw(image, decs)
+            detection.drawSight(image,joystickKey['base'],joystickKey['fort'])
             frame_data['image'] = np.frombuffer(simplejpeg.encode_jpeg(image, colorspace='BGR'), np.uint8)
-            cv2.imshow("image", cv2.resize(image, None, fx=0.7, fy=0.7))
+            cv2.imshow("image", cv2.resize(image, None, fx=1, fy=1))
 
-        joystickKey = joystick_subscriber.getKey()
+        
         frame_data.update(joystickKey)
         frame_data['ping'], frame_data['loss'] = carStateCheck.get_latency_loss()
         frame_data['speed'], frame_data['volt'] = carStateCheck.get_speed_volt()
         frame_data = detection.decs2UnityFormat(decs, frame_data)
-        try:
-            print(frame_data['deg'],frame_data['x0'],frame_data['x1'],frame_data['y0'],frame_data['y1'])
-        except KeyError:
-            pass
+        
+        # try:
+        #     print(frame_data['deg'],frame_data['x0'],frame_data['x1'],frame_data['y0'],frame_data['y1'])
+        # except KeyError:
+        #     pass
         #print(frame_data["speed"], frame_data["volt"])
 
         data = orjson.dumps(frame_data, option=orjson.OPT_SERIALIZE_NUMPY)
