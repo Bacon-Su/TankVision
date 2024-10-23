@@ -18,8 +18,8 @@ def encoding_frame(frame):
 if __name__ == "__main__":
     #goal: multiple threads
     print("init")
-    cap = cv2.VideoCapture(r"PythonClient\a1.avi")
-    detection = Detection("PythonClient\TankPanorama\yolov9s.pt")
+    cap = cv2.VideoCapture(r"C:\Users\hsun9\Desktop\panorama_image\20241020.avi")
+    detection = Detection(r"PythonClient\TankPanorama\tank.engine")
     detection.start()
     joystick_subscriber = joystickSubscriber()
     joystick_subscriber.start()
@@ -38,23 +38,24 @@ if __name__ == "__main__":
         _,image = cap.read()
         image = cv2.resize(image, (1700, 500))
         joystickKey = joystick_subscriber.getKey()
-        image = cv2.copyMakeBorder(image, 100, 100, 0, 0, cv2.BORDER_CONSTANT,value=[0,0,0])
+        image = cv2.copyMakeBorder(image, 125, 125, 0, 0, cv2.BORDER_CONSTANT,value=[0,0,0])
+        #image = cv2.resize(image, None, fx=0.8, fy=0.8)
         frame_data = {}
         if image is not None:
             if not detection.in_queue.full():
                 detection.in_queue.put(image)
             if not detection.out_queue.empty():
                 decs = detection.out_queue.get()
-            image = detection.draw(image, decs)
-            detection.drawSight(image,joystickKey['base'],joystickKey['fort'])
+            #image = detection.draw(image, decs)
+            #detection.drawSight(image,joystickKey['base'],joystickKey['fort'])
             frame_data['image'] = np.frombuffer(simplejpeg.encode_jpeg(image, colorspace='BGR'), np.uint8)
             cv2.imshow("image", cv2.resize(image, None, fx=1, fy=1))
-
+            cv2.imwrite("image.png", image)
         
         frame_data.update(joystickKey)
         frame_data['ping'], frame_data['loss'] = carStateCheck.get_latency_loss()
         frame_data['speed'], frame_data['volt'] = carStateCheck.get_speed_volt()
-        frame_data = detection.decs2UnityFormat(decs, frame_data)
+        #frame_data = detection.decs2UnityFormat(decs, frame_data)
         
         # try:
         #     print(frame_data['deg'],frame_data['x0'],frame_data['x1'],frame_data['y0'],frame_data['y1'])
@@ -73,7 +74,7 @@ if __name__ == "__main__":
             pass
             #print("cant connect to unity")
         
-        if cv2.waitKey(12) & 0xFF == ord('q'):
+        if cv2.waitKey(0) & 0xFF == ord('q'):
             print("close")
             break
         #print('fps:', 1/(time.time() - last))

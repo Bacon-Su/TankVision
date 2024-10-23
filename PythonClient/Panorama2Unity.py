@@ -18,7 +18,7 @@ def encoding_frame(frame):
 if __name__ == "__main__":
     #goal: multiple threads
     print("init")
-    panoramaReceiver,detection = init("PythonClient\TankPanorama\yolov8n.pt","rtsp://192.168.0.24:8554/video_stream")
+    panoramaReceiver,detection = init(r"PythonClient\TankPanorama\tank.engine")#,"rtsp://192.168.0.24:8554/video_stream")
     joystick_subscriber = joystickSubscriber()
     joystick_subscriber.start()
     
@@ -45,7 +45,8 @@ if __name__ == "__main__":
             detection.drawSight(image,joystickKey['base'],joystickKey['fort'])
             frame_data['image'] = np.frombuffer(simplejpeg.encode_jpeg(image, colorspace='BGR'), np.uint8)
             cv2.imshow("image", cv2.resize(image, None, fx=0.7, fy=0.7))
-        
+            
+        frame_data = detection.decs2UnityFormat(decs,frame_data)
         frame_data.update(joystickKey)
         frame_data['ping'], frame_data['loss'] = carStateCheck.get_latency_loss()
         frame_data['speed'], frame_data['volt'] = carStateCheck.get_speed_volt()
