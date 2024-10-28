@@ -33,6 +33,11 @@ public class TCPserver : MonoBehaviour
     List<int> trackId;
     List<float> deg;
 
+    List<int> g; // goal
+    List<int> tankPos;
+    int m; // manual
+    int showMap = 0;
+
     public class Data
     {
         public byte[] image;
@@ -52,6 +57,10 @@ public class TCPserver : MonoBehaviour
         public List<int> cls;
         public List<int> trackId;
         public List<float> deg;
+        public List<int> g; // goal
+        public List<int> tankPos;
+        public int m; // manual
+        public int showMap;
     }
 
     // Start is called before the first frame update
@@ -105,6 +114,11 @@ public class TCPserver : MonoBehaviour
                 trackId = PythonJsonData.trackId;
                 deg = PythonJsonData.deg;
 
+                g = PythonJsonData.g;
+                tankPos = PythonJsonData.tankPos;
+                m = PythonJsonData.m;
+                showMap = PythonJsonData.showMap;
+                
             }
             catch (Exception e)
             {
@@ -131,6 +145,12 @@ public class TCPserver : MonoBehaviour
         YoloArror.cls = cls;
         YoloArror.trackId = trackId;
         YoloArror.deg = deg;
+        Map.goalX = g[0];
+        Map.goalY = g[1];
+        Map.manual = m==1?true:false;
+        Map.showMap = showMap==1?true:false;
+        Map.tankX = tankPos[0];
+        Map.tankY = tankPos[1];
     }
 
     private void OnDestroy()

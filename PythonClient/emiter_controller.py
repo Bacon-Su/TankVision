@@ -47,10 +47,10 @@ class Emiter(threading.Thread):
         except queue.Empty:
             return None
         try:
-            # if random.random() < 0.25:
-            #     data = self.client.sendall(None)
-            # else:
-            data = self.client.sendall(data)
+            if random.random() < 0.0:
+                data = self.client.sendall(b'')
+            else:
+                data = self.client.sendall(data)
             self.timeoutCount = 0
             return True
         except TimeoutError:

@@ -205,12 +205,19 @@ def controller_key():
             keyDict['y'] = 1
             keyDict['x'] = 0 
             keyDict['dpad'] = [0,0]
+        elif currently_pressed == set('g'):
+            keyDict['r1'] = -1
+            keyDict['steering'] = 0
+            keyDict['a'] = 1
+            keyDict['x'] = 0 
+            keyDict['dpad'] = [0,0]
         else:
             keyDict['r1'] = -1
             keyDict['steering'] = 0
             keyDict['x'] = 0 
             keyDict['b'] = 0
             keyDict['y'] = 0
+            keyDict['a'] = 0
             keyDict['dpad'] = [0,0]
     return keyDict
 
@@ -223,6 +230,10 @@ if __name__ == '__main__':
     stall = 1
     fort = 0
     base = 0
+
+    manual = 1
+    showMap = 0
+    goal = [0,0]
     while True:
         temp = controller_key()
         if int(temp["l2"]) == 1:
@@ -240,41 +251,69 @@ if __name__ == '__main__':
         steer = -float(temp["steering"])*1000
         if abs(steer) < deadspace: #死區
             steer = 0
+        if not showMap: #控制砲台
+            if temp['dpad'][1] == 1: #上
+                fort -= 2
+                if fort > 10:
+                    fort = 10
+            elif temp['dpad'][1] == -1: #下
+                fort += 2
+                if fort < -40:
+                    fort = -40
+            if temp['dpad'][0] == 1: #右
+                base += 2
+                if base > 60:
+                    base = 60
+            elif temp['dpad'][0] == -1: #左
+                base -= 2
+                if base < -60:
+                    base = -60
+        else: #控制地圖目標座標
+            if temp['dpad'][1] == 1: #上
+                goal[1] += 1
+            elif temp['dpad'][1] == -1: #下
+                goal[1] -= 1
+            if temp['dpad'][0] == 1: #右
+                goal[0] += 1
+            elif temp['dpad'][0] == -1: #左
+                goal[0] -= 1
+            # goal[0] = 0 if goal[0] < 0 else goal[0]
+            # goal[0] = 100 if goal[0] > 100 else goal[0]
+            # goal[1] = 0 if goal[1] < 0 else goal[1]
+            # goal[1] = 100 if goal[1] > 100 else goal[1]
 
-        if temp['dpad'][1] == 1: #上
-            fort -= 2
-            if fort > 10:
-                fort = 10
-        elif temp['dpad'][1] == -1: #下
-            fort += 2
-            if fort < -40:
-                fort = -40
-        if temp['dpad'][0] == 1: #右
-            base += 2
-            if base > 60:
-                base = 60
-        elif temp['dpad'][0] == -1: #左
-            base -= 2
-            if base < -60:
-                base = -60
         data = {"throttle":int(throttle),"steer":int(steer)}
         if temp['b'] == 1:
             data["fort"] = fort
             data["base"] = base
         if temp["x"] == 1:
             data["launch"] = 1
-        #print(len(json.dumps(data).encode("utf-8")))
+        if temp["y"] == 1:
+            showMap = 1-showMap
+        if temp["a"] == 1:
+            manual = 1-manual
+
+        if manual:
+            data["m"] = 1
+            data["g"] = goal
+        else:
+            data["m"] = 0
+            data["g"] = goal
+
+        print(json.dumps(data).encode("utf-8"))
+        print(len(json.dumps(data).encode("utf-8")))
         try:
             emiter.emitQueue.put(json.dumps(data).encode("utf-8"), False)
         except queue.Full:
             pass
+        data['showMap'] = showMap
         data["fort"] = fort
         data["base"] = base
-        data["a"] = temp["a"]
-        data["x"] = temp["x"]
-        data["b"] = temp["b"]
-        data["y"] = temp["y"]
-        data["dpad"] = list(temp["dpad"])
+        # data["a"] = temp["a"]
+        # data["x"] = temp["x"]
+        # data["b"] = temp["b"]
+        # data["y"] = temp["y"]
+        # data["dpad"] = list(temp["dpad"])
         data["stall"] = stall
         if not joystick_publisher.inQueue.full():
             joystick_publisher.inQueue.put(data)

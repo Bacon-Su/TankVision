@@ -63,6 +63,12 @@ class CarStateChecker_Emit(threading.Thread):
                 return self.packets[i]["SPEED"], self.packets[i]["ESP_VOLT"]
         return 0,-1
 
+    def get_tank_position(self):
+        for i in range(len(self.packets)-1,-1,-1):
+            if self.packets[i] is not None:
+                if" X" in self.packets[i].keys() and "Y" in self.packets[i].keys():
+                    return self.packets[i]["X"], self.packets[i]["Y"]
+        return -10,-10
 
     def respond(self):
         latency, _ = self.get_latency_loss()
@@ -99,7 +105,7 @@ class CarStateChecker_Emit(threading.Thread):
             return False
         if success:
             try:
-                data = self.client.recv(130)
+                data = self.client.recv(200)
             except:
                 self.packets.append(None)
                 return False

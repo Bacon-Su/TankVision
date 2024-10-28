@@ -18,7 +18,7 @@ def encoding_frame(frame):
 if __name__ == "__main__":
     #goal: multiple threads
     print("init")
-    panoramaReceiver,detection = init(r"PythonClient\TankPanorama\tank.engine")#,"rtsp://192.168.0.24:8554/video_stream")
+    panoramaReceiver,detection = init(r"PythonClient\TankPanorama\tank.engine","rtsp://192.168.0.24:8554/video_stream")
     joystick_subscriber = joystickSubscriber()
     joystick_subscriber.start()
     
@@ -50,6 +50,7 @@ if __name__ == "__main__":
         frame_data.update(joystickKey)
         frame_data['ping'], frame_data['loss'] = carStateCheck.get_latency_loss()
         frame_data['speed'], frame_data['volt'] = carStateCheck.get_speed_volt()
+        frame_data['tankPos'] = carStateCheck.get_tank_position()
         #print(frame_data["speed"], frame_data["volt"])
 
         data = orjson.dumps(frame_data, option=orjson.OPT_SERIALIZE_NUMPY)
