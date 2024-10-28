@@ -18,7 +18,7 @@ def encoding_frame(frame):
 if __name__ == "__main__":
     #goal: multiple threads
     print("init")
-    panoramaReceiver,detection = init(r"PythonClient\TankPanorama\tank.engine","rtsp://192.168.0.24:8554/video_stream")
+    panoramaReceiver,detection = init(r"PythonClient\TankPanorama\tank.engine")#,"rtsp://192.168.0.24:8554/video_stream")
     joystick_subscriber = joystickSubscriber()
     joystick_subscriber.start()
     

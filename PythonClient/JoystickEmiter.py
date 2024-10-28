@@ -20,6 +20,13 @@ import configparser
 # (-1, 0) (0, 0) (1, 0)
 # (-1,-1) (0,-1) (1,-1)
 
+HOST = "10.147.18.60"
+#HOST = "192.168.0.157"
+#HOST = "10.22.233.150"
+#HOST = "127.0.0.1"
+PORT = 65432
+"-vcodec libx265 -crf 18"
+
 SECTIONNAME = None
 deadspace = 0
 pygame.init()
@@ -223,7 +230,7 @@ def controller_key():
 
 
 if __name__ == '__main__':
-    emiter = Emiter()
+    emiter = Emiter(HOST, PORT)
     emiter.start()
     joystick_publisher = joystickPublisher()
     joystick_publisher.start()

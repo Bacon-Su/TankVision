@@ -11,13 +11,14 @@ HOST = "10.147.18.60"
 #HOST = "10.22.233.150"
 #HOST = "127.0.0.1"
 PORT = 65432
-
 "-vcodec libx265 -crf 18"
 
 class Emiter(threading.Thread):
     socket = None
     client = None
-    def __init__(self):
+    def __init__(self,host,port):
+        self.host = host
+        self.port = port
         self.initSocket() 
         super().__init__()
         self.daemon = True
@@ -26,7 +27,7 @@ class Emiter(threading.Thread):
     def initSocket(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.socket.bind((HOST, PORT))
+        self.socket.bind((self.host, self.port))
         self.socket.listen(1)
 
     def waitClient(self):
@@ -107,7 +108,7 @@ if __name__ == '__main__':
  
     listener = keyboard.Listener(on_press=on_press, on_release=on_release)
     listener.start()
-    emiter = Emiter()
+    emiter = Emiter(HOST,PORT)
     emiter.start()  
     while True:
         if currently_pressed == W:
