@@ -17,6 +17,7 @@ public class TCPserver : MonoBehaviour
     int port;
 
     byte[] imgDatas = new byte[0];
+    byte[] mapDatas = new byte[0];
     float throttle = 100;
     float steer = 0;
     int stall = 1;
@@ -33,14 +34,15 @@ public class TCPserver : MonoBehaviour
     List<int> trackId;
     List<float> deg;
 
-    List<int> g; // goal
-    List<int> tankPos;
+    List<int> g = new List<int>(){0,0}; // goal
+    List<int> tankPos = new List<int>(){0,0};
     int m; // manual
     int showMap = 0;
 
     public class Data
     {
         public byte[] image;
+        public byte[] mapImage;
         public int throttle;
         public int steer;
         public int stall;
@@ -57,8 +59,8 @@ public class TCPserver : MonoBehaviour
         public List<int> cls;
         public List<int> trackId;
         public List<float> deg;
-        public List<int> g; // goal
-        public List<int> tankPos;
+        public List<int> g = new List<int>(){0,0}; // goal
+        public List<int> tankPos = new List<int>(){0,0};
         public int m; // manual
         public int showMap;
     }
@@ -92,12 +94,14 @@ public class TCPserver : MonoBehaviour
                 NetworkStream stream = client.GetStream();
                 StreamReader sr = new StreamReader(stream);
 
-                string jsonData = sr.ReadLine();
-                Data PythonJsonData = JsonUtility.FromJson<Data>(jsonData);
+                // string jsonData = sr.ReadLine();
+                Data PythonJsonData = JsonUtility.FromJson<Data>(sr.ReadLine());
                 if (PythonJsonData.image != null){
                     imgDatas = PythonJsonData.image;
                 }
-
+                if (PythonJsonData.mapImage != null){
+                    mapDatas = PythonJsonData.mapImage;
+                }
                 ping = PythonJsonData.ping;
                 loss = PythonJsonData.loss;
                 throttle = PythonJsonData.throttle;
@@ -138,6 +142,7 @@ public class TCPserver : MonoBehaviour
         CarState.speed = speed;
         CarState.volt = volt;
         LoadIMG.ImgBytes = imgDatas;
+        Map.ImgBytes = mapDatas;
         YoloArror.x0 = x0;
         YoloArror.y0 = y0;
         YoloArror.x1 = x1;
@@ -145,12 +150,16 @@ public class TCPserver : MonoBehaviour
         YoloArror.cls = cls;
         YoloArror.trackId = trackId;
         YoloArror.deg = deg;
-        Map.goalX = g[0];
-        Map.goalY = g[1];
         Map.manual = m==1?true:false;
         Map.showMap = showMap==1?true:false;
+
         Map.tankX = tankPos[0];
         Map.tankY = tankPos[1];
+        
+        Map.goalX = g[0];
+        Map.goalY = g[1];
+        
+        
     }
 
     private void OnDestroy()

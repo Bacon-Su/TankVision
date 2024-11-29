@@ -9,6 +9,10 @@ public class Map : MonoBehaviour
     [SerializeField] private RectTransform goalTransform;
     [SerializeField] private RectTransform mapTransform;
     [SerializeField] private Graphic goalGraphic;
+    [SerializeField] private Image MapImage;
+
+    public static byte[] ImgBytes;
+    [SerializeField] private Texture2D loadTexture;
 
     public static int tankX=0, tankY=0;
     public static int goalX=0, goalY=0;
@@ -18,6 +22,10 @@ public class Map : MonoBehaviour
     public Vector2 mapSize = new Vector2(0, 0);
     public Vector2 temp = new Vector2(0, 0);
 
+    private void Awake()
+    {
+        loadTexture = new Texture2D(1, 1);
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -35,12 +43,12 @@ public class Map : MonoBehaviour
         mapSize.x = mapTransform.rect.width;
         mapSize.y = mapTransform.rect.height;
 
-        temp.x = (float)(tankX/100.0 * mapSize.x);
-        temp.y = (float)(tankY/100.0 * mapSize.y);
+        temp.x = (float)(tankX/200.0 * mapSize.x);
+        temp.y = (float)(tankY/200.0 * mapSize.y);
         tankTransform.anchoredPosition = temp;
 
-        temp.x = (float)(goalX/100.0 * mapSize.x);
-        temp.y = (float)(goalY/100.0 * mapSize.y);
+        temp.x = (float)(goalX/200.0 * mapSize.x);
+        temp.y = (float)(goalY/200.0 * mapSize.y);
 
         goalTransform.anchoredPosition = temp;
 
@@ -55,6 +63,12 @@ public class Map : MonoBehaviour
         else
         {
             goalGraphic.color = Color.green;
+        }
+        if (ImgBytes.Length != 0)
+        {
+            loadTexture.LoadImage(ImgBytes);
+            var sprite = Sprite.Create(loadTexture, new Rect(0, 0, loadTexture.width, loadTexture.height), new Vector2(loadTexture.width/2, loadTexture.height/2));
+            MapImage.sprite = sprite;
         }
     }
 }

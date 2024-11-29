@@ -39,7 +39,8 @@ class CarStateChecker_Emit(threading.Thread):
                 self.packets.clear()
                 break
             except TimeoutError:
-                print("CarStateChecker time out")
+                pass
+                # print("CarStateChecker time out")
             except BaseException as e:
                 print(e)
     
@@ -62,13 +63,6 @@ class CarStateChecker_Emit(threading.Thread):
             if self.packets[i] is not None:
                 return self.packets[i]["SPEED"], self.packets[i]["ESP_VOLT"]
         return 0,-1
-
-    def get_tank_position(self):
-        for i in range(len(self.packets)-1,-1,-1):
-            if self.packets[i] is not None:
-                if" X" in self.packets[i].keys() and "Y" in self.packets[i].keys():
-                    return self.packets[i]["X"], self.packets[i]["Y"]
-        return -10,-10
 
     def respond(self):
         latency, _ = self.get_latency_loss()
@@ -131,4 +125,5 @@ if __name__ == "__main__":
     checker.start()
     while True:
         print(checker.get_latency_loss())
+        print(checker.get_speed_volt())
         time.sleep(1)

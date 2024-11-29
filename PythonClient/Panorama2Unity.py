@@ -8,6 +8,7 @@ import sys
 import os 
 from zmqCls import joystickSubscriber
 from carStateChecker import CarStateChecker_Emit
+from carMapReceiver import CarMapReceiver
 sys.path.append("PythonClient\TankPanorama")
 from TankPanorama.panoramaReceiver import init
 
@@ -24,6 +25,10 @@ if __name__ == "__main__":
     
     carStateCheck = CarStateChecker_Emit()
     carStateCheck.start()
+
+    carMapReceiver = CarMapReceiver("10.147.18.60",65321)
+    carMapReceiver.start()
+
     print("init finish")
     TCP_IP = "127.0.0.1"
     TCP_PORT = 5066
@@ -50,23 +55,29 @@ if __name__ == "__main__":
         frame_data.update(joystickKey)
         frame_data['ping'], frame_data['loss'] = carStateCheck.get_latency_loss()
         frame_data['speed'], frame_data['volt'] = carStateCheck.get_speed_volt()
-        frame_data['tankPos'] = carStateCheck.get_tank_position()
-        #print(frame_data["speed"], frame_data["volt"])
+
+        mapImage,tankPos = carMapReceiver.getMap()
+        if mapImage is not None:
+            frame_data['mapImage'] = np.frombuffer(simplejpeg.encode_jpeg(mapImage, colorspace='BGR'), np.uint8)
+            frame_data['tankPos'] = tankPos
+            cv2.imshow('map',cv2.resize(mapImage,None,fx=0.7,fy=0.7))
 
         data = orjson.dumps(frame_data, option=orjson.OPT_SERIALIZE_NUMPY)
+        # print(len(data))
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(0.005)
+            sock.settimeout(0.01)
             sock.connect(address)
             sock.sendall(data)    
             sock.close()
-        except:
+        except BaseException as e:
+            # print(e)
+            # print("cant connect to unity")
             pass
-            #print("cant connect to unity")
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
             print("close")
             break
-        #print('fps:', 1/(time.time() - last))
+        # print('fps:', 1/(time.time() - last))
 
         

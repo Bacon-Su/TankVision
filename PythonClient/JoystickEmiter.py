@@ -239,7 +239,9 @@ if __name__ == '__main__':
     base = 0
 
     manual = 1
+    lastManualKey = False
     showMap = 0
+    lastShowMapKey = False
     goal = [0,0]
     while True:
         temp = controller_key()
@@ -296,9 +298,17 @@ if __name__ == '__main__':
         if temp["x"] == 1:
             data["launch"] = 1
         if temp["y"] == 1:
-            showMap = 1-showMap
+            if not lastShowMapKey:
+                showMap = 1-showMap
+            lastShowMapKey = True
+        else:
+            lastShowMapKey = False
         if temp["a"] == 1:
-            manual = 1-manual
+            if not lastManualKey:
+                manual = 1-manual
+            lastManualKey = True
+        else:
+            lastManualKey = False
 
         if manual:
             data["m"] = 1
@@ -307,8 +317,8 @@ if __name__ == '__main__':
             data["m"] = 0
             data["g"] = goal
 
-        print(json.dumps(data).encode("utf-8"))
-        print(len(json.dumps(data).encode("utf-8")))
+        # print(json.dumps(data).encode("utf-8"))
+        # print(len(json.dumps(data).encode("utf-8")))
         try:
             emiter.emitQueue.put(json.dumps(data).encode("utf-8"), False)
         except queue.Full:

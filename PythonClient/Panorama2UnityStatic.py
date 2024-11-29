@@ -74,7 +74,7 @@ if __name__ == "__main__":
             pass
             #print("cant connect to unity")
         
-        if cv2.waitKey(0) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             print("close")
             break
         #print('fps:', 1/(time.time() - last))

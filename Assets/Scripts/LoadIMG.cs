@@ -22,7 +22,7 @@ public class LoadIMG : MonoBehaviour
         }
         else
         {
-            Debug.Log("Not receiving frame");
+            // Debug.Log("Not receiving frame");
         }
     }
 }
