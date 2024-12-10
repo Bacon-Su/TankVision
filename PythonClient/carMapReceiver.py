@@ -64,7 +64,7 @@ class CarMapReceiver(threading.Thread):
         if len(pos) <2:
            return (0,0)
         pos = int((pos[1][0]/map.shape[1]-0.5)*100),int((-pos[0][0]/map.shape[0]+0.5)*100)
-        print(pos)
+        # print(pos)
         return pos[0],pos[1]
 
     def recv(self):

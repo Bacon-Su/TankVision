@@ -18,7 +18,7 @@ def encoding_frame(frame):
 if __name__ == "__main__":
     #goal: multiple threads
     print("init")
-    cap = cv2.VideoCapture(r"C:\Users\hsun9\Desktop\panorama_image\20241020.avi")
+    cap = cv2.VideoCapture(r"PythonClient\a1.avi")
     detection = Detection(r"PythonClient\TankPanorama\tank.engine")
     detection.start()
     joystick_subscriber = joystickSubscriber()
@@ -36,20 +36,20 @@ if __name__ == "__main__":
     while True:
         last = time.time()
         _,image = cap.read()
-        image = cv2.resize(image, (1700, 500))
+        #image = cv2.resize(image, (1700, 500))
         joystickKey = joystick_subscriber.getKey()
-        image = cv2.copyMakeBorder(image, 125, 125, 0, 0, cv2.BORDER_CONSTANT,value=[0,0,0])
-        #image = cv2.resize(image, None, fx=0.8, fy=0.8)
+        #image = cv2.copyMakeBorder(image, 125, 125, 0, 0, cv2.BORDER_CONSTANT,value=[0,0,0])
+        image = cv2.resize(image, None, fx=0.2, fy=0.2)
         frame_data = {}
         if image is not None:
             if not detection.in_queue.full():
                 detection.in_queue.put(image)
             if not detection.out_queue.empty():
                 decs = detection.out_queue.get()
-            #image = detection.draw(image, decs)
-            #detection.drawSight(image,joystickKey['base'],joystickKey['fort'])
+            image = detection.draw(image, decs)
+            detection.drawSight(image,joystickKey['base'],joystickKey['fort'])
             frame_data['image'] = np.frombuffer(simplejpeg.encode_jpeg(image, colorspace='BGR'), np.uint8)
-            cv2.imshow("image", cv2.resize(image, None, fx=1, fy=1))
+            cv2.imshow("image", cv2.resize(image, None, fx=0.7, fy=0.7))
             cv2.imwrite("image.png", image)
         
         frame_data.update(joystickKey)
