@@ -55,7 +55,7 @@ public class Map : MonoBehaviour
         temp.x = goalTransform.anchoredPosition.x - tankTransform.anchoredPosition.x + 0.00001f;
         temp.y = goalTransform.anchoredPosition.y - tankTransform.anchoredPosition.y+0.01f;
 
-        tankTransform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(temp.y, temp.x) * Mathf.Rad2Deg-90);
+        // tankTransform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(temp.y, temp.x) * Mathf.Rad2Deg-90);
         if (manual)
         {
             goalGraphic.color = Color.red;
