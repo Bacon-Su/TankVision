@@ -1,6 +1,3 @@
-[submodule "PythonClient\\TankPanorama"]
-	path = PythonClient\\TankPanorama
-	url = https://github.com/ashitamo/TankPanorama.git
 [submodule "PythonClient/TankPanorama"]
 	path = PythonClient/TankPanorama
 	url = https://github.com/ashitamo/TankPanorama
